@@ -1,0 +1,1 @@
+A foundational django project
