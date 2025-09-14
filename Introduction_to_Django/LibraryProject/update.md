@@ -1,0 +1,1 @@
+    obj = YourModel.objects.get(pk=1)
