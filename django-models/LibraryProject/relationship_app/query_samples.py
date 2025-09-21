@@ -7,5 +7,6 @@ books_by_author = author.objects.filter(author=author)
 library_name = "Nairobi Library"
 books = Library.objects.get(name=library_name).books.all()
 
+
 librarian = Librarian.objects.get(
-    Library.objects.get(name='Central Library').librarian.id)
+    library=Library.objects.get(name=library_name))
