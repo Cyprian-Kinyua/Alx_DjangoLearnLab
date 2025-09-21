@@ -1,6 +1,8 @@
 from relationship_app.models import Author, Book, Library, Librarian
 
-books_by_author = Book.objects.filter(author__name='J.K. Rowling')
+author_name = 'J.K. Rowling'
+author = Author.objects.get(name=author_name)
+books_by_author = author.objects.filter(author=author)
 
 library_name = "Nairobi Library"
 books = Library.objects.get(name=library_name).books.all()
