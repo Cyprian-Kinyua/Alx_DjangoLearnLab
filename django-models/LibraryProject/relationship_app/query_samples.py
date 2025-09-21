@@ -1,8 +1,8 @@
-from relationship_app import models
+from relationship_app.models import Author, Book, Library, Librarian
 
-books_by_author = models.Book.objects.filter(author__name='J.K. Rowling')
+books_by_author = Book.objects.filter(author__name='J.K. Rowling')
 
-books = models.Library.objects.get(name='library_name').books.all()
+books = Library.objects.get(name='library_name').books.all()
 
-librarian = models.Librarian.objects.get(
-    models.Library.objects.get(name='Central Library').librarian.id)
+librarian = Librarian.objects.get(
+    Library.objects.get(name='Central Library').librarian.id)
