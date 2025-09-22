@@ -5,7 +5,8 @@ from django.contrib.auth import login
 from .models import Book
 from .models import Library
 from django.views.generic.detail import DetailView
-from django.contrib.auth.decorators import user_passes_test, login_required, permission_required
+from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
 
