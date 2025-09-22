@@ -32,9 +32,9 @@ def register(request):
     return render(request, 'relationship_app/register.html', {'form': form})
 
 
-class CustomLoginView(LoginView):
+class LoginView(LoginView):
     template_name = 'relationship_app/login.html'
 
 
-class CustomLogoutView(LogoutView):
+class LogoutView(LogoutView):
     template_name = 'relationship_app/logout.html'
