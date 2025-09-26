@@ -35,6 +35,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # Force HTTPS
 SECURE_SSL_REDIRECT = True
 
+# Trust X-Forwarded-Proto header for HTTPS detection (if behind a proxy)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Secure cookies
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
