@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import permission_required
 from .models import Book
+from .forms import ExampleForm
 
 # Create your views here.
 
@@ -29,3 +30,14 @@ def book_edit(request, book_id):
 def book_delete(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     return HttpResponse(f"Deleting book: {book.title}.")
+
+
+def example_form_view(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST or None)
+        if form.is_valid():
+            # Process the data in form.cleaned_data
+            return HttpResponse("Form submitted successfully.")
+    else:
+        form = ExampleForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
