@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, viewsets
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Book
 from .serializers import BookSerializer
 
@@ -9,8 +10,11 @@ from .serializers import BookSerializer
 class BookList(generics.ListAPIView):
     queryset = Book.objects.all().order_by('title')
     serializer_class = BookSerializer
+    # Only authenticated users can access this view
+    permission_classes = [IsAuthenticated]
 
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all().order_by('title')
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]
