@@ -99,27 +99,35 @@ class PostDetailView(DetailView):
 # CREATE comment - function-based for clarity (posts from the post detail form)
 
 
-@login_required
-def add_comment(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.author = request.user
-            comment.post = post
-            comment.save()
-            messages.success(request, 'Your comment was posted.')
-            return redirect('post-detail', pk=post.pk)
-        else:
-            # If invalid, re-render detail with errors
-            context = {
-                'object': post,
-                'comment_form': form,
-                'comments': post.comments.all()
-            }
-            return render(request, 'blog/post_detail.html', context)
-    return redirect('post-detail', pk=post.pk)
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+
+    def form_valid(self, form):
+        post_pk = self.kwargs.get('post_pk')
+        post = get_object_or_404(Post, pk=post_pk)
+
+        # Assign author and post before saving
+        form.instance.author = self.request.user
+        form.instance.post = post
+        comment = form.save()
+
+        messages.success(self.request, 'Your comment was posted.')
+        return redirect('post-detail', pk=post_pk)
+
+    def form_invalid(self, form):
+        """
+        If the form is invalid, re-render the post detail page
+        (like in the FBV version), showing errors and existing comments.
+        """
+        post_pk = self.kwargs.get('post_pk')
+        post = get_object_or_404(Post, pk=post_pk)
+        context = {
+            'object': post,
+            'comment_form': form,
+            'comments': post.comments.all(),
+        }
+        return self.render_to_response(self.get_context_data(**context))
 
 # EDIT comment
 
