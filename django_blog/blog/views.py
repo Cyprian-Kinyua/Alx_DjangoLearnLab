@@ -9,9 +9,10 @@ from .forms import UserRegisterForm, PostForm
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Comment, TaggableManager
+from .models import Post, Comment
 from .forms import CommentForm
 from django.urls import reverse_lazy
+from taggit.models import Tag
 
 
 # Registration view.
@@ -89,10 +90,21 @@ def search_posts(request):
 # View posts by tag
 
 
-def posts_by_tag(request, tag_name):
-    posts = Post.objects.filter(tags__name__iexact=tag_name)
-    context = {'tag': tag_name, 'posts': posts}
-    return render(request, 'blog/posts_by_tag.html', context)
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list_by_tag.html'  # Needs this template
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        return Post.objects.filter(tags__in=[tag]).distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = get_object_or_404(
+            Tag, slug=self.kwargs.get('tag_slug'))
+        return context
 
 # Blog post views.
 # READ - View all posts.
