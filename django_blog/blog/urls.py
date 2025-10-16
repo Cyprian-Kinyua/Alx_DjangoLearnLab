@@ -17,11 +17,17 @@ urlpatterns = [
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
 
     # Comment paths
-    path('post/<int:pk>/comments/new/',
+    path('post/<int:post_pk>/comments/new/',
          views.CommentCreateView.as_view(), name='comment-create'),
     path('posts/<int:post_pk>/comment/<int:pk>/update/',
          views.CommentUpdateView.as_view(), name='comment-update'),
     path('posts/<int:post_pk>/comment/<int:pk>/delete/',
          views.CommentDeleteView.as_view(), name='comment-delete'),
+
+    # Tag paths
+    path('tag/<str:tag_name>/', views.posts_by_tag, name='posts-by-tag'),
+
+    # Search path
+    path('search/', views.search_posts, name='search-posts'),
 
 ]

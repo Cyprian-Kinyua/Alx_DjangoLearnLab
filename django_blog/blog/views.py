@@ -1,13 +1,15 @@
+from multiprocessing import context
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.db.models import Q
 from .forms import UserRegisterForm, PostForm
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Comment
+from .models import Post, Comment, TaggableManager
 from .forms import CommentForm
 from django.urls import reverse_lazy
 
@@ -70,6 +72,27 @@ def profile_view(request):
             return redirect('profile')
     return render(request, 'blog/profile.html')
 
+# Search view.
+
+
+def search_posts(request):
+    query = request.GET.get('q')
+    results = []
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query) | Q(content__icontains=query) | Q(
+                tags__name__icontains=query)
+        ).distinct()
+        context = {'query': query, 'results': results}
+        return render(request, 'blog/search_results.html', context)
+
+# View posts by tag
+
+
+def posts_by_tag(request, tag_name):
+    posts = Post.objects.filter(tags__name__iexact=tag_name)
+    context = {'tag': tag_name, 'posts': posts}
+    return render(request, 'blog/posts_by_tag.html', context)
 
 # Blog post views.
 # READ - View all posts.

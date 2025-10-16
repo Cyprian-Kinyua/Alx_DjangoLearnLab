@@ -16,6 +16,15 @@
           <li><a href="{% url 'login' %}">Login</a></li>
           <li><a href="{% url 'register' %}">Register</a></li>
         </ul>
+        <form method="get" action="{% url 'search-posts' %}" class="d-flex">
+          <input
+            class="form-control me-2"
+            type="search"
+            name="q"
+            placeholder="search..."
+          />
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
       </nav>
     </header>
 

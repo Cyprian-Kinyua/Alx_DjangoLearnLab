@@ -3,6 +3,14 @@
   <h2>{{ object.title }}</h2>
   <p>{{ object.content|linebreaks }}</p>
   <p>
+    <strong>Tags:</strong>
+    {% for tag in object.tags.all %}
+    <a href="{% url 'posts-by-tag' tag.name%}" class="badge bg-secondary"
+      >{{ tag.name }}</a
+    >
+    {% empty %} No tags. {% endfor %}
+  </p>
+  <p>
     <small
       >By {{ object.author.username }} on {{ object.published_date|date:"M d, Y
       H:i" }}</small
